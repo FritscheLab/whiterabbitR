@@ -69,8 +69,8 @@ option_list <- list(
     help = "Output directory [default: current directory]", metavar = "OUTPUTDIR"
   ),
   make_option(c("-f", "--output_format"),
-    type = "character", default = "tsv",
-    help = "Output format: 'tsv' for individual TSV files (default) or 'xlsx' for a renamed XLSX file", metavar = "OUTPUT_FORMAT"
+    type = "character", default = "xlsx",
+    help = "Output format: (default) renamed XLSX file or 'tsv' for individual TSV files", metavar = "OUTPUT_FORMAT"
   )
 )
 
@@ -86,6 +86,14 @@ if (is.null(opts$working_folder)) {
 workdir <- normalizePath(opts$working_folder, mustWork = TRUE)
 output_dir <- normalizePath(opts$output_dir, mustWork = FALSE)
 message("Working folder: ", workdir)
+
+# Create output directory if it doesn't exist
+if (!dir.exists(output_dir)) {
+  dir.create(output_dir, recursive = TRUE)
+  message("Created output directory: ", output_dir)
+} else {
+  message("Output directory already exists: ", output_dir)
+}
 
 # Determine file extension and delimiter based on the provided delimiter option
 if (tolower(opts$delimiter) == "tab") {
